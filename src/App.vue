@@ -17,11 +17,46 @@
 
 <script>
 
-  // process.env.VUE_APP_APIKEY
-
 export default {
 
   name: 'app',
+
+  methods: {
+
+    handleSubmit: async function (e) {
+      let container = e.target.parentElement.parentElement.children[1];
+      container.children[0].innerText = `loading..`;
+      let word = e.target.parentElement.children[1].value;
+
+      let response = await this.fetchSynonyms(word);
+      let data = await response.json();
+      // 
+      if (data[0] && data[0].meta) {
+        let synonyms = [];
+        data.map(word => word.meta.syns.map(list => {
+          list.forEach(word => synonyms.push(word));
+        }));
+        this.appendSynonyms(container, word, synonyms);
+      }
+    },
+
+    fetchSynonyms: async function (word) {
+      let url = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=`;
+      return await fetch(url + process.env.VUE_APP_APIKEY);
+    },
+
+    appendSynonyms: function (container, word, synonyms) {
+      container.children[0].innerText = `${synonyms.length} Synonyms Found For '${word}':`;
+      
+      let newHTML = synonyms.map(word => this.buildButton(word));
+      container.children[1].innerHTML = newHTML;
+    },
+
+    buildButton: function (word) {
+      return `<button class="synonym">${word}</button>`;
+    }
+
+  }
 
 }
 
