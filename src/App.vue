@@ -54,6 +54,9 @@ export default {
     determinePath: function (container, searchWord, responseData) {
       if (responseData[0] && responseData[0].meta) {
         this.gatherSynonyms(container, searchWord, responseData);
+
+      } else if (responseData.length) {
+        this.appendSuggestions(container, searchWord, responseData);
       }
     },
 
@@ -78,6 +81,13 @@ export default {
       let newHTML = synonyms.map(synonym => this.buildButton(synonym));
       container.children[1].innerHTML = newHTML;
       this.handleButtons();
+    },
+
+    appendSuggestions: function (container, word, suggestions) {
+      container.children[0].innerText = `No Results Found For '${word}', Did You Mean:`;
+
+      let newHTML = suggestions.map(word => this.buildButton(word));
+      container.children[1].innerHTML = newHTML;
     },
 
     buildButton: function (synonym) {
