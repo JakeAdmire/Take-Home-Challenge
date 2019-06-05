@@ -30,13 +30,25 @@ export default {
 
       let response = await this.fetchSynonyms(word);
       let data = await response.json();
-      // 
-      if (data[0] && data[0].meta) {
-        let synonyms = [];
-        data.map(word => word.meta.syns.map(list => {
-          list.forEach(word => synonyms.push(word));
-        }));
-        this.appendSynonyms(container, word, synonyms);
+
+      this.determinePath(container, word, data);
+    },
+
+    handleClick: async function (e) {
+      let container = e.target.parentElement.parentElement;
+      container.children[0].innerText = `loading..`;
+      container.children[1].innerHTML = '';
+      let word = e.target.innerText;
+
+      let response = await this.fetchSynonyms(word);
+      let data = await response.json();
+
+      this.determinePath(container, word, data);
+    },
+
+    determinePath: function (container, searchWord, responseData) {
+      if (responseData[0] && responseData[0].meta) {
+        this.gatherSynonyms(container, searchWord, responseData);
       }
     },
 
@@ -45,15 +57,31 @@ export default {
       return await fetch(url + process.env.VUE_APP_APIKEY);
     },
 
-    appendSynonyms: function (container, word, synonyms) {
-      container.children[0].innerText = `${synonyms.length} Synonyms Found For '${word}':`;
-      
-      let newHTML = synonyms.map(word => this.buildButton(word));
-      container.children[1].innerHTML = newHTML;
+    gatherSynonyms: function (container, searchWord, responseData) {
+      let synonyms = [];
+
+      responseData.map(collection => collection.meta.syns.map(list => {
+        list.forEach(word => synonyms.push(word));
+      }));
+
+      this.appendSynonyms(container, searchWord, synonyms);
     },
 
-    buildButton: function (word) {
-      return `<button class="synonym">${word}</button>`;
+    appendSynonyms: function (container, searchWord, synonyms) {
+      container.children[0].innerText = `${synonyms.length} Synonyms Found For '${searchWord}':`;
+      
+      let newHTML = synonyms.map(synonym => this.buildButton(synonym));
+      container.children[1].innerHTML = newHTML;
+      this.handleButtons();
+    },
+
+    buildButton: function (synonym) {
+      return `<button class="synonym">${synonym}</button>`;
+    },
+
+    handleButtons: function () {
+      let buttons = this.$el.querySelectorAll('.synonym');
+      buttons.forEach(button => button.addEventListener("click", this.handleClick ));
     }
 
   }
