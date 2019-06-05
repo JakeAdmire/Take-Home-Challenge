@@ -84,7 +84,7 @@ export default {
       container.children[0].innerText = `${synonyms.length} Synonyms Found For '${searchWord}':`;
       
       let newHTML = synonyms.map(synonym => this.buildButton(synonym));
-      container.children[1].innerHTML = newHTML;
+      container.children[1].innerHTML = newHTML.join('');
       this.handleButtons();
     },
 
@@ -125,5 +125,73 @@ export default {
   flex-direction: column;
   align-items: center;
 }
+
+input {
+  box-sizing: border-box;
+  width: 100%; height: 50px;
+  padding-left: 20px;
+  /**/
+  border: solid black 2px;
+  border-radius: 50px;
+  /**/
+  font-size: 24px;
+  transition: all .2s ease;
+}
+
+input::placeholder {
+  font-size: 24px;
+  transition: all .2s ease;
+}
+
+input:hover { border-color: grey; }
+
+input:active { opacity: 0.5; }
+
+input:focus { outline: none; }
+
+input:focus::placeholder { color: white; }
+
+.submit-button {
+  box-sizing: border-box;
+  width: 100%; height: 50px;
+  margin-top: 20px;
+  font-size: 24px;
+  color: white;
+  background: black;
+  border-radius: 50px;
+  transition: all .2s ease;
+}
+
+.submit-button:hover { 
+  background: grey;
+  cursor: pointer; 
+}
+
+.submit-button:active { opacity: 0.5; }
+
+.submit-button:focus { outline: none; }
+
+.synonym {
+  padding: 10px;
+
+  font-size: 16px;
+  font-weight: 600;
+  color: grey;
+
+  border: none;
+  border-radius: 5px;
+
+  transition: all .2s ease;
+}
+
+.synonym:hover {
+  background: grey;
+  color: white;
+  cursor: pointer;
+}
+
+.synonym:active { opacity: 0.5; }
+
+.synonym:focus { outline: none; }
 
 </style>
