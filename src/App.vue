@@ -28,6 +28,11 @@ export default {
       container.children[0].innerText = `loading..`;
       let word = e.target.parentElement.children[1].value;
 
+      if (!word) {
+        container.innerHTML = `<h3>Please Enter A Word Before Searching</h3><div></div>`;
+        return null;
+      }
+
       let response = await this.fetchSynonyms(word);
       let data = await response.json();
 
