@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import apiKey from './apiKey.js'
+
+  // process.env.VUE_APP_APIKEY
 
 export default {
 
