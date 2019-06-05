@@ -1,11 +1,11 @@
 <template>
   <div id="app">
 
-    <div>
+    <form v-on:submit="handleSubmit">
       <h1>Enter A Word To Find Synonyms</h1>
       <input type="text" placeholder="ex. 'Angry'">
       <button class="submit-button" v-on:click="handleSubmit">SUBMIT</button>
-    </div>
+    </form>
 
     <div class="container">
       <h3></h3>
@@ -24,6 +24,7 @@ export default {
   methods: {
 
     handleSubmit: async function (e) {
+      e.preventDefault();
       let container = e.target.parentElement.parentElement.children[1];
       container.children[0].innerText = `loading..`;
       let word = e.target.parentElement.children[1].value;
@@ -57,6 +58,10 @@ export default {
 
       } else if (responseData.length) {
         this.appendSuggestions(container, searchWord, responseData);
+
+      } else {
+        container.innerHTML = `<h3>No Results Found For '${searchWord}', try again!</h3><div></div>`;
+
       }
     },
 
@@ -88,6 +93,7 @@ export default {
 
       let newHTML = suggestions.map(word => this.buildButton(word));
       container.children[1].innerHTML = newHTML;
+      this.handleButtons();
     },
 
     buildButton: function (synonym) {
